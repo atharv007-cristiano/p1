@@ -1,0 +1,59 @@
+name: "deepshield_fusion"
+platform: "pytorch_libtorch"
+max_batch_size: 64
+
+# Input specifications matching our GCAT Gated Transformer fusion inputs
+input [
+  {
+    name: "visual_embedding"
+    data_type: TYPE_FP32
+    dims: [ 512 ]
+  },
+  {
+    name: "audio_embedding"
+    data_type: TYPE_FP32
+    dims: [ 512 ]
+  },
+  {
+    name: "nlp_embedding"
+    data_type: TYPE_FP32
+    dims: [ 512 ]
+  },
+  {
+    name: "behavioral_embedding"
+    data_type: TYPE_FP32
+    dims: [ 512 ]
+  },
+  {
+    name: "quality_flags"
+    data_type: TYPE_FP32
+    dims: [ 4 ]
+  }
+]
+
+# Output specifications returning classification trust indices
+output [
+  {
+    name: "trust_score"
+    data_type: TYPE_FP32
+    dims: [ 1 ]
+  },
+  {
+    name: "fusion_logits"
+    data_type: TYPE_FP32
+    dims: [ 1 ]
+  }
+]
+
+# Enable Dynamic Batching to optimize concurrent GPU compute workloads
+dynamic_batching {
+  max_queue_delay_microseconds: 5000 # Wait up to 5ms to bundle parallel API requests
+}
+
+# Bind execution instance to NVIDIA GPU
+instance_group [
+  {
+    count: 2
+    kind: KIND_GPU
+  }
+]

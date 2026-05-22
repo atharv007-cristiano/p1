@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', -apple-system, sans-serif;
+  }
+
+  body {
+    @apply font-sans bg-brand-bgLight dark:bg-brand-bgDark text-[#333333] dark:text-[#E0E0E0] antialiased transition-colors duration-200;
+    font-weight: 400;
+  }
+  
+  /* Enforce weight constraints (400 and 500 weights only) */
+  h1, h2, h3, h4, h5, h6, th, strong, .font-medium, .font-semibold, .font-bold, .font-extrabold {
+    font-weight: 500 !important;
+  }
+  
+  body, p, span, a, input, select, textarea, button, td, .font-normal {
+    font-weight: 400 !important;
+  }
+}
+
+/* Clinical custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(12, 68, 124, 0.1);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(12, 68, 124, 0.25);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Staggered load animation */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom border classes matching tailwind.config */
+.border-thin-gray {
+  border-width: 0.5px;
+  border-color: rgba(12, 68, 124, 0.08);
+}
+
+.dark .border-thin-gray {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Custom classes for grid matrix visual overlays */
+.grid-dot-matrix {
+  background-image: radial-gradient(rgba(163, 45, 45, 0.15) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+.dark .grid-dot-matrix {
+  background-image: radial-gradient(rgba(163, 45, 45, 0.3) 1px, transparent 1px);
+}
