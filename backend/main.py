@@ -15,10 +15,6 @@ from routers.detect import router as detect_router
 from routers.jobs import router as jobs_router
 from routers.stream import router as stream_router
 
-# Preserve registration, auth, and metrics stats routes from app main
-# We import from existing app layout to keep all historical tables intact
-from app.main import app as legacy_app
-
 # Initialize database schemas
 Base.metadata.create_all(bind=engine)
 
