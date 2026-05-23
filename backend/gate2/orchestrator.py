@@ -7,7 +7,6 @@ from typing import List, Dict, Any
 from gate2.image.srm_analyzer import analyze_srm_residuals
 from gate2.image.frequency_analyzer import analyze_frequency_domain
 from gate2.image.ela_analyzer import analyze_ela
-from gate2.gate2.image.gan_cnn import analyze_gan_artifacts # Wait, in the layout it's gate2/image/gan_cnn.py. Let's fix import to be direct gate2.image
 from gate2.image.gan_cnn import analyze_gan_artifacts
 from gate2.image.face_consistency import analyze_face_consistency
 
