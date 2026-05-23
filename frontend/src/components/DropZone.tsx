@@ -2,7 +2,7 @@
 
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { IconUpload, IconVideo, IconVolume, IconPhoto, IconShieldAlert } from '@tabler/icons-react';
+import { IconUpload, IconVideo, IconVolume, IconPhoto, IconAlertCircle } from '@tabler/icons-react';
 import { Button } from './shared';
 
 interface DropZoneProps {
@@ -99,7 +99,7 @@ export const DropZone: React.FC<DropZoneProps> = ({ onFileAccepted, isScanning }
 
       {errorMsg && (
         <div className="flex items-center gap-2 p-3 bg-[#A32D2D]/5 border border-[#A32D2D]/20 text-[#A32D2D] text-xs rounded-card font-medium">
-          <IconShieldAlert className="w-4 h-4 stroke-[1.5] shrink-0" />
+          <IconAlertCircle className="w-4 h-4 stroke-[1.5] shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}

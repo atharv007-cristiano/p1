@@ -70,8 +70,8 @@ interface AppStore {
 
 export const useStore = create<AppStore>((set) => ({
   activeTab: 'detect',
-  theme: (localStorage.getItem('theme') as 'light' | 'dark') || 'light',
-  onboardingComplete: localStorage.getItem('onboardingComplete') === 'true',
+  theme: typeof window !== 'undefined' ? (localStorage.getItem('theme') as 'light' | 'dark') || 'light' : 'light',
+  onboardingComplete: typeof window !== 'undefined' ? localStorage.getItem('onboardingComplete') === 'true' : false,
   
   isScanning: false,
   scanPhase: '',
