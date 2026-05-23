@@ -1,0 +1,17 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy dependency configs
+COPY frontend/package.json frontend/package-lock.json* /app/
+
+# Install node dependencies
+RUN npm install
+
+# Copy source files
+COPY frontend /app/
+
+# Expose Next.js dev/prod ports
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

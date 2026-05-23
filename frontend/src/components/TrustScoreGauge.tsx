@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { IconShieldCheck, IconShield } from '@tabler/icons-react';
@@ -5,7 +7,7 @@ import { Badge, cn } from './shared';
 
 interface TrustScoreGaugeProps {
   score: number; // [0.0, 1.0]
-  action: 'AUTO_APPROVE' | 'AUTO_REJECT' | 'HUMAN_REVIEW';
+  action: 'auto_approved' | 'auto_rejected' | 'human_review';
   provenanceVerified?: boolean;
 }
 
@@ -14,13 +16,11 @@ export const TrustScoreGauge: React.FC<TrustScoreGaugeProps> = ({
   action,
   provenanceVerified = false,
 }) => {
-  // Animating the score count-up
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => Math.round(latest * 100));
   const [displayPercent, setDisplayPercent] = useState(0);
 
   useEffect(() => {
-    // Reset to 0 then animate to the score
     count.set(0);
     const controls = animate(count, score, {
       duration: 1.2,
@@ -30,7 +30,6 @@ export const TrustScoreGauge: React.FC<TrustScoreGaugeProps> = ({
     return () => controls.stop();
   }, [score, count]);
 
-  // Determine dynamic colors and texts
   let strokeColor = '#0F6E56'; // Default Teal (Success)
   let verdictLabel = 'Authentic liveness verified';
   let badgeVariant: 'success' | 'danger' | 'warning' | 'info' = 'success';
@@ -41,8 +40,8 @@ export const TrustScoreGauge: React.FC<TrustScoreGaugeProps> = ({
     verdictLabel = 'Synthetic — auto-rejected';
     badgeVariant = 'danger';
     Icon = IconShield;
-  } else if (score >= 0.3 && score <= 0.6) {
-    strokeColor = '#D97706'; // Amber (Warning - matching clinical branding orange)
+  } else if (score >= 0.3 && score < 0.5) {
+    strokeColor = '#D97706'; // Amber (Warning)
     verdictLabel = 'Human review needed';
     badgeVariant = 'warning';
     Icon = IconShield;
@@ -53,29 +52,24 @@ export const TrustScoreGauge: React.FC<TrustScoreGaugeProps> = ({
     badgeVariant = 'success';
   }
 
-  // SVG parameters for standard semi-circle or full arc
   const radius = 70;
   const strokeWidth = 10;
   const circumference = 2 * Math.PI * radius;
-  // Arc length: Let's do a full circular arc
   const strokeDashoffset = circumference - (score * circumference);
 
   return (
-    <div className="flex flex-col items-center gap-6 p-6 bg-white dark:bg-[#161616] rounded-card border-thin-gray transition-all select-none">
+    <div className="flex flex-col items-center gap-6 p-6 bg-white dark:bg-[#161616] rounded-card border border-[#E5E5E5]/60 dark:border-[#2D2D2D]/60 transition-all select-none w-full text-center">
       
-      {/* Header title */}
       <div className="w-full flex items-center justify-between">
-        <span className="text-xs text-[#888888] dark:text-[#A0A0A0] uppercase tracking-wider font-medium">Verdict Engine</span>
+        <span className="text-[10px] text-[#888888] dark:text-[#A0A0A0] uppercase tracking-wider font-semibold">Verdict Engine</span>
         <Icon className={cn("w-5 h-5 stroke-[1.5]", 
           badgeVariant === 'success' ? 'text-[#0F6E56]' : 
           badgeVariant === 'danger' ? 'text-[#A32D2D]' : 'text-[#D97706]'
         )} />
       </div>
 
-      {/* Dynamic radial SVG arc gauge */}
       <div className="relative flex items-center justify-center w-40 h-40">
         <svg className="w-full h-full transform -rotate-90">
-          {/* Background circle track */}
           <circle
             cx="80"
             cy="80"
@@ -84,7 +78,6 @@ export const TrustScoreGauge: React.FC<TrustScoreGaugeProps> = ({
             stroke="rgba(12, 68, 124, 0.05)"
             strokeWidth={strokeWidth}
           />
-          {/* Active colored arc */}
           <motion.circle
             cx="80"
             cy="80"
@@ -100,7 +93,6 @@ export const TrustScoreGauge: React.FC<TrustScoreGaugeProps> = ({
           />
         </svg>
 
-        {/* Center score indicator */}
         <div className="absolute flex flex-col items-center justify-center text-center">
           <span className="text-3xl font-medium tracking-tight text-[#111111] dark:text-white">
             {displayPercent / 100}
@@ -111,7 +103,6 @@ export const TrustScoreGauge: React.FC<TrustScoreGaugeProps> = ({
         </div>
       </div>
 
-      {/* Verdict & Badge summary info */}
       <div className="flex flex-col items-center gap-2 text-center w-full">
         <Badge variant={badgeVariant} className="px-3 py-1 text-xs">
           {verdictLabel}
@@ -123,20 +114,18 @@ export const TrustScoreGauge: React.FC<TrustScoreGaugeProps> = ({
         </p>
       </div>
 
-      {/* Threshold indicator sliders */}
       <div className="w-full flex flex-col gap-2 border-t border-[#E5E5E5]/60 dark:border-[#2C2C2C]/60 pt-4">
-        <div className="flex justify-between text-[9px] text-[#888888] font-medium uppercase tracking-wider">
+        <div className="flex justify-between text-[9px] text-[#888888] font-medium uppercase tracking-wider font-mono">
           <span>0.0 Threat</span>
           <span>0.3</span>
-          <span>0.6</span>
+          <span>0.5</span>
           <span>1.0 Verified</span>
         </div>
         <div className="h-1.5 w-full rounded-pill bg-[#F5F5F5] dark:bg-[#222222] relative flex overflow-hidden">
           <div className="h-full bg-[#A32D2D]/20 border-r border-[#A32D2D]/10" style={{ width: '30%' }}></div>
-          <div className="h-full bg-[#D97706]/20 border-r border-[#D97706]/10" style={{ width: '30%' }}></div>
-          <div className="h-full bg-[#0F6E56]/20" style={{ width: '40%' }}></div>
+          <div className="h-full bg-[#D97706]/20 border-r border-[#D97706]/10" style={{ width: '20%' }}></div>
+          <div className="h-full bg-[#0F6E56]/20" style={{ width: '50%' }}></div>
           
-          {/* Bounding tick indicator */}
           <motion.div 
             className="absolute w-2 h-2 rounded-full bg-[#111111] dark:bg-white border border-[#E5E5E5] dark:border-[#2C2C2C] shadow-sm -top-[1px] transition-all"
             style={{ left: `calc(${score * 100}% - 4px)` }}
